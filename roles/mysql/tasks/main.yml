@@ -1,0 +1,37 @@
+- name: install yum packages
+  yum: pkg={{ item }} state=present
+  with_items:
+    - mysql
+    - mysql-server
+    - MySQL-python
+- name: set my.cnf
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+    mode: 0644
+- name: copy .my.cnf file with root password credentials
+  template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    mode: 0600
+- name: start mysql
+  service: name=mysqld enabled=yes state=restarted
+- name: set root account
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+- name: create database
+  mysql_db:
+    name: "{{ database_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+- name: create user
+  mysql_user:
+    name: "{{ mysql_username }}"
+    password: "{{ mysql_password }}"
+    priv: "{{ database_name }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"

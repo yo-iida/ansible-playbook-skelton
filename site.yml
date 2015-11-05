@@ -1,0 +1,7 @@
+# site.yml: 実行ファイルと読み込む変数を設定する
+
+---
+- include: webservers.yml
+  vars_files:
+    - vars/{{ stage }}/main.yml
+    - vars/{{ stage }}/secret.yml

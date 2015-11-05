@@ -1,0 +1,4 @@
+# group_vars: 全環境でgroupごとの共通の設定値を書く
+
+---
+# key: value
